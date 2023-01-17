@@ -16,4 +16,4 @@ config/icon="res://icon.svg"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/script-name-on-top/plugin.cfg", "res://addons/quick_script_change/plugin.cfg")
+enabled=PackedStringArray("res://addons/quick_script_change/plugin.cfg")
