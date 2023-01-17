@@ -1,6 +1,6 @@
 # Quick Script Change
 Godot 4 plugin that allow you to change your script immediately!  
-If you left empty blank it shows you last opened scripts.
+If you left empty blank it'll show you last opened scripts.
 
 ## How to use:
 ***Double shift*** -> show popup.  
