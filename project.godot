@@ -14,6 +14,10 @@ config/name="QuickChangeScript"
 config/features=PackedStringArray("4.0", "Forward Plus")
 config/icon="res://icon.svg"
 
+[editor]
+
+export/convert_text_resources_to_binary=true
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/quick_script_change/plugin.cfg")

@@ -66,7 +66,7 @@ func _on_change_text(text):
 		return
 
 	var all_paths := _get_filelist("res://", ["gd"])
-	var filtered := all_paths.filter(func(path): return path.contains(text))
+	var filtered := all_paths.filter(func(path): return path.to_lower().contains(text.to_lower()))
 	_spawn_buttons(filtered)
 
 
