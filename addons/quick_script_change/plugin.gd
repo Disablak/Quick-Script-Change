@@ -108,8 +108,8 @@ func _add_script_to_recent(path):
 		recently_scripts.resize(RECENTLY_SCRIPTS_COUNT)
 
 
-func _get_filelist(scan_dir : String, filter_exts : Array = []) -> Array[String]:
-	var my_files : Array[String] = []
+func _get_filelist(scan_dir : String, filter_exts : Array = []) -> Array:
+	var my_files = []
 	var dir := DirAccess.open(scan_dir)
 	if not dir:
 		printerr("Warning: could not open directory: ", scan_dir)
@@ -122,7 +122,8 @@ func _get_filelist(scan_dir : String, filter_exts : Array = []) -> Array[String]
 	var file_name := dir.get_next()
 	while file_name != "":
 		if dir.current_is_dir():
-			my_files.assign(_get_filelist(dir.get_current_dir() + "/" + file_name, filter_exts))
+			my_files += _get_filelist(dir.get_current_dir() + "/" + file_name, filter_exts)
+
 		else:
 			if filter_exts.size() == 0:
 				my_files.append(dir.get_current_dir() + "/" + file_name)
