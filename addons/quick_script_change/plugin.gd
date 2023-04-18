@@ -40,7 +40,7 @@ func _exit_tree() -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		var key_event := event as InputEventKey
-		if key_event.keycode == KEY_TO_CALL_POPUP and key_event.is_pressed():
+		if key_event.keycode == KEY_TO_CALL_POPUP and !key_event.is_pressed():
 			if shift_was_pressed and (Time.get_ticks_msec() - last_time_shift_pressed) < MS_DETECT_INPUT:
 				shift_was_pressed = false
 				_show_popup()
@@ -122,7 +122,7 @@ func _get_filelist(scan_dir : String, filter_exts : Array = []) -> Array[String]
 	var file_name := dir.get_next()
 	while file_name != "":
 		if dir.current_is_dir():
-			my_files += _get_filelist(dir.get_current_dir() + "/" + file_name, filter_exts)
+			my_files.assign(_get_filelist(dir.get_current_dir() + "/" + file_name, filter_exts))
 		else:
 			if filter_exts.size() == 0:
 				my_files.append(dir.get_current_dir() + "/" + file_name)
