@@ -2,8 +2,11 @@
 extends EditorPlugin
 
 
-const scene_popup: PackedScene = preload("res://addons/quick_script_change/QuickChangePopup.tscn")
+const SCENE_POPUP: PackedScene = preload("res://addons/quick_script_change/QuickChangePopup.tscn")
+
 const KEY_TO_CALL_POPUP = KEY_SHIFT
+const KEY_TO_EXIT_FROM_SCRIPT_EDITOR = KEY_ESCAPE
+
 const MS_DETECT_INPUT = 300
 const RECENTLY_SCRIPTS_COUNT = 10
 
@@ -21,13 +24,14 @@ var recently_scripts: Array[String]
 
 
 func _enter_tree() -> void:
-	popup = scene_popup.instantiate()
+	popup = SCENE_POPUP.instantiate()
 	text_edit = popup.get_child(0).get_child(0) as LineEdit
 	scroll_container = popup.get_child(0).get_child(1).get_child(0) as Control
 
 	text_edit.text_changed.connect(_on_change_text)
 
-	get_editor_interface().get_base_control().add_child(popup)
+	script_editor.add_child(popup)
+
 	popup.hide()
 
 
@@ -47,6 +51,8 @@ func _input(event: InputEvent) -> void:
 			else:
 				shift_was_pressed = true
 				last_time_shift_pressed = Time.get_ticks_msec()
+
+
 
 
 func _show_popup():
@@ -77,12 +83,14 @@ func _erase_all_buttons():
 
 func _spawn_buttons(all_paths):
 	_erase_all_buttons()
+	popup.update_size(all_paths.size())
 
 	for path in all_paths:
 		var btn = Button.new()
 		scroll_container.add_child(btn)
 
 		btn.text = path
+		btn.size = Vector2(btn.size.x, 150)
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		btn.pressed.connect(func(): _on_click_btn(path))
 
@@ -133,3 +141,33 @@ func _get_filelist(scan_dir : String, filter_exts : Array = []) -> Array:
 						my_files.append(dir.get_current_dir() + "/" + file_name)
 		file_name = dir.get_next()
 	return my_files
+
+
+func get_current_screen_node() -> Control:
+	for child in get_editor_interface() \
+		.get_editor_main_screen() \
+		.get_children():
+		if child is Control and child.visible:
+			return child
+	return null
+
+
+func get_current_screen() -> String:
+	var child = get_current_screen_node()
+	if child is Control and child.visible:
+		match child.get_class():
+			"CanvasItemEditor":
+				return "2D"
+			"Node3DEditor":
+				return "3D"
+			"ScriptEditor":
+				return "Script"
+			"EditorAssetsLibrary":
+				return "AssetLib"
+			_:
+				if str(child.name).contains("@"):
+					return child.get_class()
+				return child.name
+
+	# default 2D viewport
+	return "2D"
